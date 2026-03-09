@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Site em Manutenção</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(99,102,241,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(168,85,247,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .container {
+      text-align: center;
+      padding: 2rem;
+      max-width: 700px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #a78bfa, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 3rem;
+      line-height: 1.6;
+    }
+
+    /* Countdown */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .unit {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      min-width: 90px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s;
+    }
+
+    .unit:hover { transform: translateY(-3px); }
+
+    .unit .number {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      background: linear-gradient(135deg, #e2e8f0, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .unit .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #64748b;
+      margin-top: 0.5rem;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-bottom: 2.5rem;
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,0.07);
+      border-radius: 999px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #818cf8, #c084fc);
+      border-radius: 999px;
+      transition: width 1s linear;
+    }
+
+    .progress-label {
+      font-size: 0.75rem;
+      color: #475569;
+      margin-top: 0.5rem;
+    }
+
+    /* Target date line */
+    .target-info {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 2rem;
+    }
+
+    .target-info span {
+      color: #a78bfa;
+      font-weight: 600;
+    }
+
+    /* Done state */
+    .done-msg {
+      display: none;
+      font-size: 1.1rem;
+      color: #86efac;
+      background: rgba(134,239,172,0.1);
+      border: 1px solid rgba(134,239,172,0.2);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: #334155;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="icon">🛠️</div>
+  <h1>Site em Manutenção</h1>
+  <p class="subtitle">
+    Estamos a fazer melhorias para te oferecer uma experiência ainda melhor.<br>
+    Voltamos em breve!
+  </p>
+
+  <div class="countdown">
+    <div class="unit"><div class="number" id="days">00</div><div class="label">Dias</div></div>
+    <div class="unit"><div class="number" id="hours">00</div><div class="label">Horas</div></div>
+    <div class="unit"><div class="number" id="minutes">00</div><div class="label">Minutos</div></div>
+    <div class="unit"><div class="number" id="seconds">00</div><div class="label">Segundos</div></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">A calcular...</div>
+  </div>
+
+  <p class="target-info">Previsão de retorno: <span id="targetDisplay"></span></p>
+
+  <div class="done-msg" id="doneMsg">✅ A manutenção terminou! Podes recarregar a página.</div>
+
+  <footer>© <script>document.write(new Date().getFullYear())</script> — Todos os direitos reservados.</footer>
+</div>
+
+<script>
+  // ============================================================
+  //  ⚙️  CONFIGURAÇÃO — altera apenas esta linha:
+  //  Formato: YYYY-MM-DDTHH:MM:SS  (hora local)
+  // ============================================================
+  const TARGET = new Date("2026-03-10T10:00:00");
+  // ============================================================
+
+  const START = new Date();   // momento em que a página foi carregada
+
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  // Format target for display
+  const opts = { weekday:"long", day:"numeric", month:"long", year:"numeric",
+                 hour:"2-digit", minute:"2-digit" };
+  document.getElementById("targetDisplay").textContent =
+    TARGET.toLocaleDateString("pt-PT", opts);
+
+  function tick() {
+    const now  = new Date();
+    const diff = TARGET - now;
+
+    if (diff <= 0) {
+      ["days","hours","minutes","seconds"].forEach(id =>
+        document.getElementById(id).textContent = "00");
+      document.getElementById("progressFill").style.width = "100%";
+      document.getElementById("progressLabel").textContent = "Concluído!";
+      document.getElementById("doneMsg").style.display = "block";
+      return;
+    }
+
+    const totalSec = Math.floor(diff / 1000);
+    const d = Math.floor(totalSec / 86400);
+    const h = Math.floor((totalSec % 86400) / 3600);
+    const m = Math.floor((totalSec % 3600)  / 60);
+    const s = totalSec % 60;
+
+    document.getElementById("days").textContent    = pad(d);
+    document.getElementById("hours").textContent   = pad(h);
+    document.getElementById("minutes").textContent = pad(m);
+    document.getElementById("seconds").textContent = pad(s);
+
+    // Progress bar: percentage of time elapsed since page load
+    const span    = TARGET - START;
+    const elapsed = now    - START;
+    const pct     = Math.min(100, Math.max(0, (elapsed / span) * 100));
+    document.getElementById("progressFill").style.width = pct.toFixed(2) + "%";
+    document.getElementById("progressLabel").textContent =
+      pct.toFixed(1) + "% do tempo de manutenção decorrido";
+
+    setTimeout(tick, 1000);
+  }
+
+  tick();
+</script>
+</body>
+</html>
